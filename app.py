@@ -38,46 +38,27 @@ def predict():
     inputQuery5 = request.form['query5']
     inputQuery6 = request.form['query6']
     inputQuery7 = request.form['query7']
-    inputQuery8 = request.form['query8']
-    inputQuery9 = request.form['query9']
-    inputQuery10 = request.form['query10']
-    inputQuery11 = request.form['query11']
-    inputQuery12 = request.form['query12']
-    inputQuery13 = request.form['query13']
-    inputQuery14 = request.form['query14']
-    inputQuery15 = request.form['query15']
-    inputQuery16 = request.form['query16']
-    inputQuery17 = request.form['query17']
-    inputQuery18 = request.form['query18']
-    inputQuery19 = request.form['query19']
-
     model = pickle.load(open("model.sav", "rb"))
     
-    data = [[inputQuery1, inputQuery2, inputQuery3, inputQuery4, inputQuery5, inputQuery6, inputQuery7, 
-             inputQuery8, inputQuery9, inputQuery10, inputQuery11, inputQuery12, inputQuery13, inputQuery14,
-             inputQuery15, inputQuery16, inputQuery17, inputQuery18, inputQuery19]]
+    data = [[inputQuery1, inputQuery2, inputQuery3, inputQuery4, inputQuery5, inputQuery6, inputQuery7
+            ]]
     
-    new_df = pd.DataFrame(data, columns = ['SeniorCitizen', 'MonthlyCharges', 'TotalCharges', 'gender', 
-                                           'Partner', 'Dependents', 'PhoneService', 'MultipleLines', 'InternetService',
-                                           'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport',
-                                           'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling',
-                                           'PaymentMethod', 'tenure'])
+    new_df = pd.DataFrame(data, columns = ['Age', 'Gender', 'Location', 'Subscription_Length_Months', 
+                                           'Monthly_Bill', 'Total_Charges', 'Total_Usage_GB'])
     
     df_2 = pd.concat([df_1, new_df], ignore_index = True) 
     # Group the tenure in bins of 12 months
     labels = ["{0} - {1}".format(i, i + 11) for i in range(1, 72, 12)]
     
-    df_2['tenure_group'] = pd.cut(df_2.tenure.astype(int), range(1, 80, 12), right=False, labels=labels)
+    df_2['age'] = pd.cut(df_2.tenure.astype(int), range(1, 80, 12), right=False, labels=labels)
     #drop column customerID and tenure
-    df_2.drop(columns= ['tenure'], axis=1, inplace=True)   
+    #df_2.drop(columns= ['age'], axis=1, inplace=True)   
     
     
     
     
-    new_df__dummies = pd.get_dummies(df_2[['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'PhoneService',
-           'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup',
-           'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies',
-           'Contract', 'PaperlessBilling', 'PaymentMethod','tenure_group']])
+    new_df__dummies = pd.get_dummies(df_2[['Age', 'Gender', 'Location', 'Subscription_Length_Months', 
+                                           'Monthly_Bill', 'Total_Charges', 'Total_Usage_GB']])
     
     
     #final_df=pd.concat([new_df__dummies, new_dummy], axis=1)
@@ -101,17 +82,6 @@ def predict():
                            query5 = request.form['query5'], 
                            query6 = request.form['query6'], 
                            query7 = request.form['query7'], 
-                           query8 = request.form['query8'], 
-                           query9 = request.form['query9'], 
-                           query10 = request.form['query10'], 
-                           query11 = request.form['query11'], 
-                           query12 = request.form['query12'], 
-                           query13 = request.form['query13'], 
-                           query14 = request.form['query14'], 
-                           query15 = request.form['query15'], 
-                           query16 = request.form['query16'], 
-                           query17 = request.form['query17'],
-                           query18 = request.form['query18'], 
-                           query19 = request.form['query19'])
+                           )
     
 app.run()
