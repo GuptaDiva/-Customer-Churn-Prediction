@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from flask import Flask, request, render_template
 import pickle
-
+import numpy as np
 app = Flask("__name__")
 
 df_1=pd.read_csv("dataset.csv")
@@ -45,6 +45,8 @@ def predict():
     
     new_df = pd.DataFrame(data, columns = ['Age', 'Gender', 'Location', 'Subscription_Length_Months', 
                                            'Monthly_Bill', 'Total_Charges', 'Total_Usage_GB'])
+    pred=np.array(new_df)
+    print(pred)
     
     df_2 = pd.concat([df_1, new_df], ignore_index = True) 
     # Group the tenure in bins of 12 months
@@ -52,7 +54,7 @@ def predict():
     
     df_2['age'] = pd.cut(df_2.tenure.astype(int), range(1, 80, 12), right=False, labels=labels)
     #drop column customerID and tenure
-    #df_2.drop(columns= ['age'], axis=1, inplace=True)   
+    df_2.drop(columns= ['age'], axis=1, inplace=True)   
     
     
     
@@ -61,7 +63,7 @@ def predict():
                                            'Monthly_Bill', 'Total_Charges', 'Total_Usage_GB']])
     
     
-    #final_df=pd.concat([new_df__dummies, new_dummy], axis=1)
+   # final_df=pd.concat([new_df__dummies, new_dummy], axis=1)
         
     
     single = model.predict(new_df__dummies.tail(1))
